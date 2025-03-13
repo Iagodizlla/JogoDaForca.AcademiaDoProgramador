@@ -76,7 +76,9 @@
                 char[] le = new char[pes.Length];
 
                 for (int i = 0; i < le.Length; i++)
-                le[i] = '_';
+                {
+                    le[i] = '_';
+                }
 
                 int qe = 0;
                 bool perdeu = false, ganhou = false, dica = false;
