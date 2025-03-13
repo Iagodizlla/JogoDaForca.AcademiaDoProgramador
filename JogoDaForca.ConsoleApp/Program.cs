@@ -68,7 +68,7 @@
         "MEDICO",
         "SKIN"
 };
-
+                
                 Random random = new Random();
                 int ns = random.Next(p.Length);
                 string pes = p[ns];
@@ -121,6 +121,7 @@
                         else if (ns >= 42 && ns < 59)
                         {
                             Console.WriteLine("Dica: Algo do jogo 'Among Us'");
+                            Console.WriteLine("----------------------------------------------");
                         }
                     }
                     Console.Write("Digite uma letra: ");
@@ -165,10 +166,12 @@
 
                 Console.Write("Quer jogar novamente? (S/N): ");
                 string jn = Console.ReadLine().ToUpper();
+
                 if (jn != "S")
                 {
                     break;
                 }
+
             } while (true);
         }
     }
