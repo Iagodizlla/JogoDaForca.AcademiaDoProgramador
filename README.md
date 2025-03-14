@@ -1,6 +1,6 @@
 # Jogo da Forca
 
-![]()
+![](https://i.imgur.com/98HKJ1s.gif)
 
 ## Projeto
 
