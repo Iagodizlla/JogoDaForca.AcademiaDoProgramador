@@ -1,4 +1,6 @@
-﻿namespace JogoDaForca.ConsoleApp
+﻿using System.Reflection.Metadata;
+
+namespace JogoDaForca.ConsoleApp
 {
     internal class Program
     {
@@ -6,6 +8,8 @@
         {
             do
             {
+                int qe = 0;
+                bool perdeu = false, ganhou = false, dica = false;
                 string[] p = {
         "DIAMANTE",//minecraft
         "FERRO",
@@ -68,69 +72,29 @@
         "MEDICO",
         "SKIN"
 };
-                
-                Random random = new Random();
-                int ns = random.Next(p.Length);
+                //Recebe um número aleatório
+                int ns = GerarNumeroAleatorio(p);
                 string pes = p[ns];
-
                 char[] le = new char[pes.Length];
 
                 for (int i = 0; i < le.Length; i++)
                 {
                     le[i] = '_';
                 }
-
-                int qe = 0;
-                bool perdeu = false, ganhou = false, dica = false;
                 do
                 {
-                    string lfd = qe >= 1 ? " | " : " ";
-                    string cd = qe >= 1 ? " o " : " ";
-                    string tsd = qe >= 2 ? "X" : " ";
-                    string tid = qe >= 2 ? " X " : " ";
-                    string bqd = qe >= 3 ? "/" : " ";
-                    string bdd = qe >= 4 ? @"\" : " ";
-                    string pqd = qe >= 5 ? "/" : " ";
-                    string pdd = qe >= 6 ? " \\" : " ";
-
-                    Console.Clear();
-                    Console.WriteLine("----------------------------------------------");
-                    Console.WriteLine("Jogo da Forca");
-                    Console.WriteLine("----------------------------------------------");
-                    Console.WriteLine(" ___________        ");
-                    Console.WriteLine(" |/       {0}       ", lfd);
-                    Console.WriteLine(" |        {0}       ", cd);
-                    Console.WriteLine(" |        {0}{1}{2} ", bqd, tsd, bdd);
-                    Console.WriteLine(" |        {0}       ", tid);
-                    Console.WriteLine(" |        {0}{1}    ", pqd, pdd);
-                    Console.WriteLine(" |                  ");
-                    Console.WriteLine(" |                  ");
-                    Console.WriteLine("_|____              ");
-                    Console.WriteLine("----------------------------------------------");
-                    Console.WriteLine("Erros do jogador: " + qe);
-                    Console.WriteLine("----------------------------------------------");
-                    Console.WriteLine("Palavra escolhida: " + String.Join("", le));
-                    Console.WriteLine("----------------------------------------------");
+                    //Mostra o desenho da forca
+                    Desenho(qe, le);
 
                     if (qe == 3 && dica == false)
                     {
-                        dica = true;
-                        if (ns < 42)
-                        {
-                            Console.WriteLine("Dica: Algo do jogo 'Minecraft'");
-                            Console.WriteLine("----------------------------------------------");
-                        }
-                        else if (ns >= 42 && ns < 59)
-                        {
-                            Console.WriteLine("Dica: Algo do jogo 'Among Us'");
-                            Console.WriteLine("----------------------------------------------");
-                        }
+                        //fala uma dica pro usuario
+                        Dica(ns, dica);
                     }
-                    Console.Write("Digite uma letra: ");
-                    char chute = Console.ReadLine()!.ToUpper()[0];
+                    //Recebe a letra do jogador
+                    char chute = ChuteUsuario();
 
                     bool lfe = false;
-
                     for (int i = 0; i < pes.Length; i++)
                     {
                         char la = pes[i];
@@ -141,40 +105,111 @@
                             lfe = true;
                         }
                     }
-
                     if (lfe == false)
                     {
                         qe++;
                     }
+                    //Mostra caso o jogador tenha ganhado ou perdido
+                    ganhou = JogoGanhou(ganhou, pes, le);
+                    perdeu = JogoPerdeu(perdeu, qe, pes);
 
-                    string pe = String.Join("", le);
-
-                    ganhou = pe == pes;
-                    perdeu = qe > 6;
-
-                    if (ganhou)
-                    {
-                        Console.WriteLine("----------------------------------------------");
-                        Console.WriteLine($"Você acertou a palavra secreta {pes}, parabéns!");
-                        Console.WriteLine("----------------------------------------------");
-                    }
-                    else if (perdeu)
-                    {
-                        Console.WriteLine("----------------------------------------------");
-                        Console.WriteLine("Que azar! Tente novamente!\nA palavar era: "+pes);
-                        Console.WriteLine("----------------------------------------------");
-                    }
                 } while (perdeu == false && ganhou == false);
-
-                Console.Write("Quer jogar novamente? (S/N): ");
-                string jn = Console.ReadLine().ToUpper();
+                //Pergunta se o jogador quer jogar novamente
+                string jn = JogarNovamente();
 
                 if (jn != "S")
                 {
                     break;
                 }
-
             } while (true);
+        }
+        static void Desenho(int qe, char[] le)
+        {
+            string lfd = qe >= 1 ? " | " : " ";
+            string cd = qe >= 1 ? " o " : " ";
+            string tsd = qe >= 2 ? "X" : " ";
+            string tid = qe >= 2 ? " X " : " ";
+            string bqd = qe >= 3 ? "/" : " ";
+            string bdd = qe >= 4 ? @"\" : " ";
+            string pqd = qe >= 5 ? "/" : " ";
+            string pdd = qe >= 6 ? " \\" : " ";
+
+            Console.Clear();
+            Console.WriteLine("----------------------------------------------");
+            Console.WriteLine("Jogo da Forca");
+            Console.WriteLine("----------------------------------------------");
+            Console.WriteLine(" ___________        ");
+            Console.WriteLine(" |/       {0}       ", lfd);
+            Console.WriteLine(" |        {0}       ", cd);
+            Console.WriteLine(" |        {0}{1}{2} ", bqd, tsd, bdd);
+            Console.WriteLine(" |        {0}       ", tid);
+            Console.WriteLine(" |        {0}{1}    ", pqd, pdd);
+            Console.WriteLine(" |                  ");
+            Console.WriteLine(" |                  ");
+            Console.WriteLine("_|____              ");
+            Console.WriteLine("----------------------------------------------");
+            Console.WriteLine("Erros do jogador: " + qe);
+            Console.WriteLine("----------------------------------------------");
+            Console.WriteLine("Palavra escolhida: " + String.Join("", le));
+            Console.WriteLine("----------------------------------------------");
+        }
+        static void Dica(int ns, bool dica)
+        {
+            dica = true;
+            if (ns < 42)
+            {
+                Console.WriteLine("Dica: Algo do jogo 'Minecraft'");
+                Console.WriteLine("----------------------------------------------");
+            }
+            else if (ns >= 42 && ns < 59)
+            {
+                Console.WriteLine("Dica: Algo do jogo 'Among Us'");
+                Console.WriteLine("----------------------------------------------");
+            }
+        }
+        static int GerarNumeroAleatorio(string[] p)
+        {
+            Random random = new Random();
+            int ns = random.Next(p.Length);
+            return ns;
+        }
+        static bool JogoGanhou(bool ganhou, string pes, char[] le)
+        {
+            string pe = String.Join("", le);
+            ganhou = pe == pes;
+            
+
+            if (ganhou)
+            {
+                Console.WriteLine("----------------------------------------------");
+                Console.WriteLine($"Você acertou a palavra secreta {pes}, parabéns!");
+                Console.WriteLine("----------------------------------------------");
+            }
+            
+            return ganhou;
+        }
+        static bool JogoPerdeu(bool perdeu, int qe, string pes)
+        {
+            perdeu = qe > 6;
+            if (perdeu)
+            {
+                Console.WriteLine("----------------------------------------------");
+                Console.WriteLine("Que azar! Tente novamente!\nA palavar era: " + pes);
+                Console.WriteLine("----------------------------------------------");
+            }
+            return perdeu;
+        }
+        static string JogarNovamente()
+        {
+            Console.Write("Quer jogar novamente? (S/N): ");
+            string jn = Console.ReadLine()!.ToUpper();
+            return jn;
+        }
+        static char ChuteUsuario()
+        {
+            Console.Write("Digite uma letra: ");
+            char chute = Console.ReadLine()!.ToUpper()[0];
+            return chute;
         }
     }
 }
