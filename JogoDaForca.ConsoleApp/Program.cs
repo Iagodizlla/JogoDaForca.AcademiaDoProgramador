@@ -73,6 +73,7 @@ namespace JogoDaForca.ConsoleApp
         "SKIN"
 };
                 //Recebe um número aleatório
+
                 int ns = GerarNumeroAleatorio(p);
                 string pes = p[ns];
                 char[] le = new char[pes.Length];
