@@ -1,5 +1,4 @@
 ﻿using System.Reflection.Metadata;
-
 namespace JogoDaForca.ConsoleApp
 {
     internal class Program
